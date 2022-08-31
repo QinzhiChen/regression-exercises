@@ -31,8 +31,7 @@ def wrangle_zillow():
     if os.path.isfile(file):
         return pd.read_csv(file)
     else:
-        zillow2017 = pd.read_sql(('SELECT bedroomcnt,bathroomcnt,calculatedfinishedsquarefeet,taxvaluedollarcnt,yearbuilt,taxamount,fips FROM properties_2017'), get_connection('zillow'))
-        zillow2017_df = zillow2017_df.astype('int')
+        zillow2017_df = pd.read_sql(('SELECT bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxvaluedollarcnt, yearbuilt, taxamount, fips FROM properties_2017 JOIN propertylandusetype USING (propertylandusetypeid) WHERE propertylandusedesc IN ("Single Family Residential")'), get_connection('zillow'))
         zillow2017_df.to_csv(file,index=False)
     return zillow2017_df
 
