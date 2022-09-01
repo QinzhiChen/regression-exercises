@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
+# In[1]:
 
 
 import warnings
@@ -20,14 +20,14 @@ import os
 import csv
 
 
-# In[14]:
+# In[2]:
 
 
 def get_connection(db, user=env.user, host=env.host, password=env.password):
     return f'mysql+pymysql://{user}:{password}@{host}/{db}'
 
 
-# In[15]:
+# In[3]:
 
 
 def acquire_zillow():
@@ -35,23 +35,25 @@ def acquire_zillow():
     if os.path.isfile(file):
         return pd.read_csv(file)
     else:
-        zillow2017_df = pd.read_sql(('SELECT bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxvaluedollarcnt, yearbuilt,taxamount,fips FROM properties_2017 JOIN propertylandusetype USING (propertylandusetypeid) WHERE propertylandusedesc IN ("Single Family Residential")'), get_connection('zillow'))
+        zillow2017_df = pd.read_sql(('SELECT bedroomcnt,bathroomcnt,calculatedfinishedsquarefeet, taxvaluedollarcnt, yearbuilt, taxamount, fips,lotsizesquarefeet,regionidzip,assessmentyear,transactiondate FROM properties_2017 JOIN propertylandusetype USING (propertylandusetypeid) JOIN predictions_2017 USING (id) WHERE propertylandusedesc IN ("Single Family Residential")'), get_connection('zillow'))
         zillow2017_df.to_csv(file,index=False)
     return zillow2017_df
 
 
-# In[28]:
+# In[4]:
 
 
 def clean_column():
     zillow2017_df=acquire_zillow()
-    zillow2017_df.rename(columns={'bedroomcnt':'bedroom','bathroomcnt':'bathroom','calculatedfinishedsquarefeet':'sqtft','taxvaluedollarcnt':'taxvalue'},inplace=True)
+    zillow2017_df.rename(columns={'bedroomcnt':'bedroom','bathroomcnt':'bathroom','calculatedfinishedsquarefeet':'sqtft','taxvaluedollarcnt':'taxvalue','garagecarcnt':'garage','lotsizesquarefeet':'lots','poolcnt':'pool','regionidzip':'zipcode'},inplace=True)
     zillow2017_df['fips']= zillow2017_df['fips'].astype(object)
     zillow2017_df['yearbuilt']=zillow2017_df['yearbuilt'].astype(object)
+    zillow2017_df['assessmentyear']=zillow2017_df['assessmentyear'].astype(object)
+    zillow2017_df['zipcode']=zillow2017_df['zipcode'].astype(object)
     return zillow2017_df
 
 
-# In[70]:
+# In[5]:
 
 
 def remove_outlier(k):
@@ -67,7 +69,7 @@ def remove_outlier(k):
     return zillow2017_df
 
 
-# In[91]:
+# In[6]:
 
 
 def get_hist(k):
@@ -85,7 +87,7 @@ def get_hist(k):
     plt.show()
 
 
-# In[92]:
+# In[7]:
 
 
 def wrangle_zillow(k):
@@ -96,7 +98,7 @@ def wrangle_zillow(k):
     return zillow_train, zillow_validate, zillow_test
 
 
-# In[93]:
+# In[9]:
 
 # In[ ]:
 
