@@ -50,6 +50,7 @@ def clean_column():
     zillow2017_df['yearbuilt']=zillow2017_df['yearbuilt'].astype(object)
     zillow2017_df['assessmentyear']=zillow2017_df['assessmentyear'].astype(object)
     zillow2017_df['zipcode']=zillow2017_df['zipcode'].astype(object)
+    zillow2017_df['taxrate']=round((zillow2017_df.taxamount/zillow2017_df.taxvalue),2).astype(object)
     return zillow2017_df
 
 
