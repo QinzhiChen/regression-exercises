@@ -66,8 +66,7 @@ def remove_outlier(k):
         upper_bound = q3 + k * iqr  
         lower_bound = q1 - k * iqr  
         zillow2017_df = zillow2017_df[(zillow2017_df[col] > lower_bound) & (zillow2017_df[col] < upper_bound)]
-        zillow2017_df.dropna()
-    return zillow2017_df
+    return zillow2017_df.dropna()
 
 
 # In[6]:
